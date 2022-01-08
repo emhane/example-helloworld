@@ -136,6 +136,13 @@ solana program deploy dist/program/helloworld.so
 npm run start
 ```
 
+### Build extended example instead with extended client
+
+```bash
+npm run build:program-rust
+npm run start-extended
+```
+
 ### Expected output
 
 Public key values will differ:
