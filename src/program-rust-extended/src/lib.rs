@@ -17,6 +17,8 @@ use crate::instruction::GreetingInstruction;
 pub struct GreetingAccount {
     /// number of greetings
     pub counter: u32,
+    /// age as sent in instruction_data
+    pub age: u32,
 }
 
 // Declare and export the program's entrypoint
@@ -53,11 +55,13 @@ pub fn process_instruction(
         GreetingInstruction::SayHello { age, name } => {
             // increment counter for SayHello variant
             greeting_account.counter += 1;
+            greeting_account.age = u32::from(age);
             msg!("Hello! Age: {:?}, Name: {:?}", age.to_string(), &name);
         },
         GreetingInstruction::SayBye { age, name } => {
             // decrease counter for SayBye variant
             greeting_account.counter -= 1;
+            greeting_account.age = u32::from(age);
             msg!("Bye! Age: {:?}, Name: {:?}", age.to_string(), &name);
         },
         _ => {}

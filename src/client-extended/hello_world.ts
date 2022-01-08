@@ -63,9 +63,11 @@ const PROGRAM_KEYPAIR_PATH = path.join(PROGRAM_PATH, 'helloworld-keypair.json');
  */
 class GreetingAccount {
   counter = 0;
-  constructor(fields: {counter: number} | undefined = undefined) {
+  age = 0;
+  constructor(fields: {counter: number, age: number} | undefined = undefined) {
     if (fields) {
       this.counter = fields.counter;
+      this.age = fields.age;
     }
   }
 }
@@ -74,7 +76,7 @@ class GreetingAccount {
  * Borsh schema definition for greeting accounts
  */
 const GreetingSchema = new Map([
-  [GreetingAccount, {kind: 'struct', fields: [['counter', 'u32']]}],
+  [GreetingAccount, {kind: 'struct', fields: [['counter', 'u32'], ['age', 'u32']]}],
 ]);
 
 /**
@@ -268,6 +270,8 @@ export async function reportGreetings(): Promise<void> {
   );
   console.log(
     greetedPubkey.toBase58(),
+    'by sender of age',
+    greeting.age,
     'has been greeted',
     greeting.counter,
     'time(s)',
