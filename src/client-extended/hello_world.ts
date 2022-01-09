@@ -64,10 +64,12 @@ const PROGRAM_KEYPAIR_PATH = path.join(PROGRAM_PATH, 'helloworld-keypair.json');
 class GreetingAccount {
   counter = 0;
   age = 0;
-  constructor(fields: {counter: number, age: number} | undefined = undefined) {
+  first_letter = 0;
+  constructor(fields: {counter: number, age: number, first_letter: number} | undefined = undefined) {
     if (fields) {
       this.counter = fields.counter;
       this.age = fields.age;
+      this.first_letter = fields.first_letter;
     }
   }
 }
@@ -76,7 +78,7 @@ class GreetingAccount {
  * Borsh schema definition for greeting accounts
  */
 const GreetingSchema = new Map([
-  [GreetingAccount, {kind: 'struct', fields: [['counter', 'u32'], ['age', 'u32']]}],
+  [GreetingAccount, {kind: 'struct', fields: [['counter', 'u32'], ['age', 'u32'], ['first_letter', 'u8']]}],
 ]);
 
 /**
@@ -238,7 +240,7 @@ export async function sayHello(): Promise<void> {
   const instruction = new TransactionInstruction({
     keys: [{pubkey: greetedPubkey, isSigner: false, isWritable: true}],
     programId,
-    data: createSayByeInstructionData(), // This instruction is Hello
+    data: createSayHelloInstructionData(), // This instruction is Hello
   });
   const signature =await sendAndConfirmTransaction(
     connection,
@@ -269,10 +271,13 @@ export async function reportGreetings(): Promise<void> {
     accountInfo.data,
   );
   console.log(
-    greetedPubkey.toBase58(),
-    'by sender of age',
+    'Greeting by',
+    String.fromCharCode(greeting.first_letter),
+    'of age',
     greeting.age,
-    'has been greeted',
+    'to',
+    greetedPubkey.toBase58(),
+    'greeted',
     greeting.counter,
     'time(s)',
   );

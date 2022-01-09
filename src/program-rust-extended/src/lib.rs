@@ -19,6 +19,8 @@ pub struct GreetingAccount {
     pub counter: u32,
     /// age as sent in instruction_data
     pub age: u32,
+    /// for this simple demo only datatypes of known size are stored that can be implicitly de-/serialized
+    pub first_letter: u8,
 }
 
 // Declare and export the program's entrypoint
@@ -56,15 +58,16 @@ pub fn process_instruction(
             // increment counter for SayHello variant
             greeting_account.counter += 1;
             greeting_account.age = u32::from(age);
+            greeting_account.first_letter = name.as_bytes()[0];
             msg!("Hello! Age: {:?}, Name: {:?}", age.to_string(), &name);
         },
         GreetingInstruction::SayBye { age, name } => {
             // decrease counter for SayBye variant
             greeting_account.counter -= 1;
             greeting_account.age = u32::from(age);
+            greeting_account.first_letter = name.as_bytes()[0];
             msg!("Bye! Age: {:?}, Name: {:?}", age.to_string(), &name);
-        },
-        _ => {}
+        }
     }  
 
     greeting_account.serialize(&mut &mut account.data.borrow_mut()[..])?;
