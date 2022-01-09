@@ -82,14 +82,13 @@ pub fn process_instruction(
 mod test {
     use super::*;
     use solana_program::clock::Epoch;
-    use std::mem;
 
     #[test]
     fn test_sanity() {
         let program_id = Pubkey::default();
         let key = Pubkey::default();
         let mut lamports = 0;
-        let mut data = vec![0; mem::size_of::<u32>()];
+        let mut data = vec![0; 9];
         let owner = Pubkey::default();
         let account = AccountInfo::new(
             &key,
@@ -101,8 +100,8 @@ mod test {
             false,
             Epoch::default(),
         );
-        let instruction_data: Vec<u8> = Vec::new();
-        let instruction_data_bye: Vec<u8> = Vec::new(1);
+        let instruction_data: Vec<u8> = vec![0, 0, 0];
+        let instruction_data_bye: Vec<u8> = vec![1, 0, 0];
 
         let accounts = vec![account];
 
@@ -125,6 +124,13 @@ mod test {
                 .unwrap()
                 .counter,
             2
+        );
+        process_instruction(&program_id, &accounts, &instruction_data_bye).unwrap();
+        assert_eq!(
+            GreetingAccount::try_from_slice(&accounts[0].data.borrow())
+                .unwrap()
+                .counter,
+            1
         );
     }
 }

@@ -8,7 +8,6 @@ use solana_sdk::{
     signature::Signer,
     transaction::Transaction,
 };
-use std::mem;
 
 #[tokio::test]
 async fn test_helloworld() {
@@ -24,7 +23,7 @@ async fn test_helloworld() {
         greeted_pubkey,
         Account {
             lamports: 5,
-            data: vec![0_u8; mem::size_of::<u32>()],
+            data: vec![0_u8; 9],
             owner: program_id,
             ..Account::default()
         },
@@ -48,7 +47,7 @@ async fn test_helloworld() {
     let mut transaction = Transaction::new_with_payer(
         &[Instruction::new_with_bincode(
             program_id,
-            &[0], // ignored but makes the instruction unique in the slot
+            &[0, 0, 0], // instruction 0 SayHello
             vec![AccountMeta::new(greeted_pubkey, false)],
         )],
         Some(&payer.pubkey()),
@@ -73,7 +72,7 @@ async fn test_helloworld() {
     let mut transaction = Transaction::new_with_payer(
         &[Instruction::new_with_bincode(
             program_id,
-            &[1], // ignored but makes the instruction unique in the slot
+            &[0, 1, 0], // instruction 0 SayHello, with different age to make unique in slot
             vec![AccountMeta::new(greeted_pubkey, false)],
         )],
         Some(&payer.pubkey()),
