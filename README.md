@@ -139,7 +139,7 @@ npm run start
 ### Build extended example instead with extended client
 
 ```bash
-npm run build:program-rust
+npm run build:program-rust-extended
 npm run start-extended
 ```
 
